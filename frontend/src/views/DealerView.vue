@@ -2558,4 +2558,4 @@ export default {
   .nav-links button { font-size: 12.5px; }
   .modal-content { padding: 16px; }
 }
-</style>
+</style>  
