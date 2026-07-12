@@ -328,7 +328,7 @@ export default {
     const isCartOpen = ref(false);
     const orders = ref([]);
     const router = useRouter();
-    const backendUrl = 'http://127.0.0.1:8000';
+    const backendUrl = 'https://surprising-enchantment-production-5152.up.railway.app';
 
     const fetchOrderHistory = async () => {
       try {
