@@ -3,38 +3,45 @@
     <!-- ==================== TOP NAVBAR ==================== -->
     <header class="navbar">
       <div class="navbar-inner">
-        <div class="brand">
-          <i class="ri-shopping-bag-3-line"></i>
-          <span>Top-Savdo <b>B2B</b></span>
+        <div class="navbar-top-row">
+          <div class="brand">
+            <i class="ri-shopping-bag-3-line"></i>
+            <span>Top-Savdo <b>B2B</b></span>
+          </div>
+
+          <div class="nav-icons">
+            <button class="btn btn-outline cart-nav-btn" @click="isCartOpen = true" title="Savat">
+              <i class="ri-shopping-cart-2-line"></i>
+              <span class="btn-text">Savat</span>
+              <span class="cart-count" v-if="cart.length > 0">{{ cart.length }}</span>
+            </button>
+            <button class="btn btn-ghost" @click="handleLogout" title="Chiqish">
+              <i class="ri-logout-box-r-line"></i>
+            </button>
+          </div>
         </div>
-        <div class="nav-actions">
+
+        <div class="nav-tabs">
           <button
-            class="btn"
+            class="btn tab-btn"
             :class="activeTab === 'catalog' ? 'btn-primary' : 'btn-ghost'"
             @click="activeTab = 'catalog'"
           >
-            <i class="ri-store-2-line"></i> Katalog
+            <i class="ri-store-2-line"></i> <span class="btn-text">Katalog</span>
           </button>
           <button
-            class="btn"
+            class="btn tab-btn"
             :class="activeTab === 'history' ? 'btn-primary' : 'btn-ghost'"
             @click="activeTab = 'history'"
           >
-            <i class="ri-history-line"></i> Savdo tarixi
+            <i class="ri-history-line"></i> <span class="btn-text">Savdo tarixi</span>
           </button>
           <button
-            class="btn"
+            class="btn tab-btn"
             :class="activeTab === 'debts' ? 'btn-primary' : 'btn-ghost'"
             @click="activeTab = 'debts'"
           >
-            <i class="ri-wallet-3-line"></i> Qarzlar &amp; limitlar
-          </button>
-          <button class="btn btn-outline cart-nav-btn" @click="isCartOpen = true">
-            <i class="ri-shopping-cart-2-line"></i> Savat
-            <span class="cart-count" v-if="cart.length > 0">{{ cart.length }}</span>
-          </button>
-          <button class="btn btn-ghost" @click="handleLogout">
-            <i class="ri-logout-box-r-line"></i>
+            <i class="ri-wallet-3-line"></i> <span class="btn-text">Qarzlar &amp; limitlar</span>
           </button>
         </div>
       </div>
@@ -504,10 +511,11 @@ export default {
   margin: 0 auto;
   padding: 16px 24px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
+  gap: 20px;
+}
+.navbar-top-row {
+  display: contents;
 }
 .brand {
   color: #fff;
@@ -516,9 +524,16 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 .brand i { font-size: 24px; color: #34d399; }
-.nav-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.nav-tabs {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex: 1 1 auto;
+}
+.nav-icons { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
 .btn {
   padding: 9px 16px;
   border-radius: 8px;
