@@ -27,6 +27,8 @@ urlpatterns = [
     # 🟢 BU YERNI O'ZGARTIRDIK: endi u ham v1 prefiksi ostida ishlaydi!
     path('api/v1/', include('products.urls')),
 
-] urlpatterns += [
+] 
+
+urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]

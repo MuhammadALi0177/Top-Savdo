@@ -147,6 +147,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://top-savdo-production.up.railway.app",
 ]
 
+
 AUTH_USER_MODEL = 'accounts.User'
 APPEND_SLASH = False
 
