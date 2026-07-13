@@ -786,4 +786,94 @@ export default {
     opacity: 0.5;
   }
 }
+
+/* ===== MOBIL MOSLASHUV ===== */
+@media (max-width: 900px) {
+  .dashboard-wrapper {
+    flex-direction: column;
+  }
+  .sidebar-menu {
+    width: 100%;
+    min-width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+  .sidebar-brand {
+    flex: 1 1 auto;
+  }
+  .user-brief-info {
+    flex: 1 1 auto;
+    padding: 8px 10px;
+  }
+  .availability-card {
+    flex: 1 1 100%;
+    order: 3;
+  }
+  .nav-links {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    order: 4;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .nav-links button {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-count {
+    margin-left: 6px;
+  }
+  .main-content-area {
+    padding: 18px 14px;
+  }
+  .main-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .page-title h2 {
+    font-size: 18px;
+  }
+  .header-actions {
+    width: 100%;
+  }
+  .header-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .table-container {
+    overflow-x: auto;
+  }
+  .custom-data-table {
+    min-width: 640px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-brand h3 {
+    font-size: 15px;
+  }
+  .page-title h2 {
+    font-size: 16px;
+  }
+  .order-card {
+    padding: 14px;
+  }
+  .order-card-body p {
+    font-size: 13px;
+  }
+  .refresh-btn,
+  .logout-btn {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+}
 </style>
