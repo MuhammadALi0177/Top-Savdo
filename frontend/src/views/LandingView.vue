@@ -417,7 +417,7 @@ export default {
   background: linear-gradient(135deg, #0a2f1d 0%, #114e32 50%, #1f6e43 100%);
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 40;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 .navbar-inner {
