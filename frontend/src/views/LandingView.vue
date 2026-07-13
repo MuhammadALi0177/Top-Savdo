@@ -7,12 +7,41 @@
           <i class="ri-building-2-fill"></i>
           <span>Top-Savdo <b>B2B</b></span>
         </div>
+
         <div class="nav-actions">
+          <a href="#dealers-section" class="nav-link">Dilerlar</a>
+          <a href="#products-section" class="nav-link">Mahsulotlar</a>
           <router-link to="/login" class="btn btn-ghost">Kirish</router-link>
           <router-link to="/signup" class="btn btn-primary">Ro'yxatdan o'tish</router-link>
         </div>
+
+        <!-- 🟢 Mobil uchun 3 tiziqli (hamburger) tugma -->
+        <button class="hamburger-btn" @click="toggleMenu" title="Menyu">
+          <i :class="isMenuOpen ? 'ri-close-line' : 'ri-menu-line'"></i>
+        </button>
       </div>
+
+      <!-- 🟢 Mobilda hamburger bosilganda ochiladigan menyu -->
+      <transition name="slide-fade">
+        <div v-if="isMenuOpen" class="mobile-menu">
+          <a href="#dealers-section" class="mobile-menu-link" @click="closeMenu">
+            <i class="ri-store-2-line"></i> Dilerlar
+          </a>
+          <a href="#products-section" class="mobile-menu-link" @click="closeMenu">
+            <i class="ri-box-3-line"></i> Mahsulotlar
+          </a>
+          <router-link to="/login" class="mobile-menu-link" @click="closeMenu">
+            <i class="ri-login-box-line"></i> Kirish
+          </router-link>
+          <router-link to="/signup" class="mobile-menu-link primary" @click="closeMenu">
+            <i class="ri-user-add-line"></i> Ro'yxatdan o'tish
+          </router-link>
+        </div>
+      </transition>
     </header>
+
+    <!-- 🟢 Menyu ochiq bo'lganda fonni qorong'ilashtiruvchi qatlam -->
+    <div class="mobile-menu-overlay" v-if="isMenuOpen" @click="closeMenu"></div>
 
     <!-- ==================== HERO ==================== -->
     <section class="hero">
@@ -246,6 +275,11 @@ export default {
     const router = useRouter();
     const backendUrl = 'https://surprising-enchantment-production-5152.up.railway.app';
 
+    // 🟢 Mobil hamburger menyu holati
+    const isMenuOpen = ref(false);
+    const toggleMenu = () => { isMenuOpen.value = !isMenuOpen.value; };
+    const closeMenu = () => { isMenuOpen.value = false; };
+
     const dealers = ref([]);
     const loadingDealers = ref(false);
     const dealersError = ref('');
@@ -347,6 +381,9 @@ export default {
     });
 
     return {
+      isMenuOpen,
+      toggleMenu,
+      closeMenu,
       dealers,
       loadingDealers,
       dealersError,
@@ -400,7 +437,50 @@ export default {
   gap: 8px;
 }
 .brand i { font-size: 24px; color: #34d399; }
-.nav-actions { display: flex; gap: 12px; }
+.nav-actions { display: flex; align-items: center; gap: 12px; }
+.nav-link {
+  color: #d1fae5;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px 6px;
+  transition: color 0.2s ease;
+}
+.nav-link:hover { color: #34d399; }
+
+/* 🟢 Hamburger tugma (mobilda ko'rinadi, desktopda yashirin) */
+.hamburger-btn {
+  display: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 22px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.hamburger-btn:hover { background: rgba(255, 255, 255, 0.16); }
+
+/* 🟢 Mobil ochiladigan menyu */
+.mobile-menu {
+  display: none;
+}
+.mobile-menu-overlay {
+  display: none;
+}
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.22s ease;
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
 .btn {
   padding: 9px 18px;
   border-radius: 8px;
@@ -728,13 +808,86 @@ hr {
   margin: 30px 0;
 }
 
+/* ===== NOUTBUK / KICHIKROQ DESKTOP ===== */
+@media (max-width: 1100px) {
+  .navbar-inner { padding: 14px 18px; }
+  .dealer-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+  .product-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+}
+
+/* ===== PLANSHET ===== */
 @media (max-width: 860px) {
   .hero-inner { grid-template-columns: 1fr; }
   .hero-art { order: -1; max-width: 320px; margin: 0 auto; }
 }
-@media (max-width: 560px) {
-  .navbar-inner { flex-direction: column; gap: 12px; }
-  .hero-text h1 { font-size: 28px; }
-  .stats-row { gap: 22px; }
+
+/* ===== TELEFON: navbar hamburgerga aylanadi ===== */
+@media (max-width: 768px) {
+  .nav-actions { display: none; }
+  .hamburger-btn { display: flex; }
+
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: #0a2f1d;
+    padding: 10px 16px 16px;
+    position: relative;
+    z-index: 35;
+  }
+  .mobile-menu-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e2f6ee;
+    text-decoration: none;
+    font-size: 14.5px;
+    font-weight: 600;
+    padding: 12px 10px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+  }
+  .mobile-menu-link:hover,
+  .mobile-menu-link:active { background: rgba(255, 255, 255, 0.08); }
+  .mobile-menu-link.primary {
+    background: #10b981;
+    color: #fff;
+    justify-content: center;
+    margin-top: 6px;
+  }
+  .mobile-menu-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 20;
+  }
+
+  .navbar-inner { padding: 14px 16px; }
+  .hero { padding: 40px 16px; }
+  .hero-text h1 { font-size: 26px; }
+  .hero-text p { font-size: 14px; }
+  .stats-row { gap: 20px; flex-wrap: wrap; }
+  .section { padding: 32px 16px; }
+  .section-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .dealer-grid { grid-template-columns: 1fr; }
+  .product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .product-image { height: 160px; }
+  .footer-container { flex-direction: column; gap: 24px; }
+}
+
+/* ===== KICHIK TELEFONLAR ===== */
+@media (max-width: 480px) {
+  .brand span { font-size: 15px; }
+  .hero-text h1 { font-size: 22px; }
+  .hero-tag { font-size: 12px; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { width: 100%; justify-content: center; }
+  .stats-row { gap: 14px; }
+  .stat strong { font-size: 18px; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-body h4 { font-size: 13.5px; }
+  .price { font-size: 13px; }
+  .buy-btn { padding: 7px 10px; font-size: 12px; }
 }
 </style>
