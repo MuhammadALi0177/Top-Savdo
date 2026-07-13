@@ -3,7 +3,8 @@ from django.urls import path, include
 from accounts.views import CustomAuthToken, SignupView, AdminUserListView, CourierMeView, PublicDealerListView, PublicDealerDetailView
 from django.conf import settings
 from django.conf.urls.static import static
-   
+from django.views.static import serve
+from django.urls import re_path
 urlpatterns = [
     path('admin/', admin.site.urls),
     
@@ -26,4 +27,6 @@ urlpatterns = [
     # 🟢 BU YERNI O'ZGARTIRDIK: endi u ham v1 prefiksi ostida ishlaydi!
     path('api/v1/', include('products.urls')),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+]
