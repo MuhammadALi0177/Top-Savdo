@@ -40,6 +40,33 @@ class AdminUserListView(generics.ListAPIView):
         )
 
 # =========================================================================
+# 🟢 Admin: foydalanuvchini o'chirish
+# =========================================================================
+class AdminUserDeleteView(generics.DestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserAdminSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        if not (request.user.role == 'ADMIN' or request.user.is_superuser or request.user.is_staff):
+            return Response(
+                {"error": "Sizda bu amalni bajarish uchun huquq yo'q!"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        user_to_delete = self.get_object()
+
+        # 🟢 Admin o'zini-o'zi o'chirib qo'ymasligi uchun himoya
+        if user_to_delete.id == request.user.id:
+            return Response(
+                {"error": "O'zingizni o'chira olmaysiz!"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        return super().delete(request, *args, **kwargs)
+
+# =========================================================================
 # 🟢 Public Dealer List: Landing sahifada, ro'yxatdan o'tmagan mehmonlar
 # ham dilerlar ro'yxatini va ularning mahsulot sonini ko'rishi uchun.
 # =========================================================================

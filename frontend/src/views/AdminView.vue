@@ -244,6 +244,7 @@
                 <th>Telefon</th>
                 <th>Rol</th>
                 <th>Holati</th>
+                <th>Amallar</th>
               </tr>
             </thead>
             <tbody>
@@ -264,6 +265,14 @@
                     :class="{ active: user.is_active }"
                     >{{ user.is_active ? "Faol" : "Bloklangan" }}</span
                   >
+                </td>
+                <td>
+                  <button
+                    @click="deleteUser(user.id, user.username)"
+                    class="delete-btn"
+                  >
+                    <i class="ri-delete-bin-7-line"></i> O'chirish
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -543,6 +552,30 @@ export default {
       }
     };
 
+    // 🟢 Admin foydalanuvchini o'chirish
+    const deleteUser = async (id, username) => {
+      if (!confirm(`"${username}" foydalanuvchisini o'chirishni tasdiqlaysizmi?`)) return;
+
+      const token = localStorage.getItem("token");
+      try {
+        await api.delete(`admin/users/${id}/`, {
+          headers: { Authorization: `Token ${token}` },
+        });
+
+        // O'chirgandan so'ng ro'yxatni yangilash
+        await fetchUsers();
+        loadKuryerlar();
+        fallbackFermalar();
+      } catch (error) {
+        console.error("Foydalanuvchini o'chirishda xato:", error);
+        const msg =
+          error.response && error.response.data && error.response.data.error
+            ? error.response.data.error
+            : "Foydalanuvchini o'chirib bo'lmadi.";
+        alert(msg);
+      }
+    };
+
     const fetchProducts = async () => {
   try {
     // ESKI: api.get('admin/products/')
@@ -723,6 +756,7 @@ const deleteCategory = async (id, name) => {
       openCatModal,
       submitCategory,
       deleteCategory,
+      deleteUser,
       countByRole,
       getTabTitle,
       handleLogout,

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from accounts.views import CustomAuthToken, SignupView, AdminUserListView, CourierMeView, PublicDealerListView, PublicDealerDetailView
+from accounts.views import CustomAuthToken, SignupView, AdminUserListView, AdminUserDeleteView, CourierMeView, PublicDealerListView, PublicDealerDetailView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve
@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/v1/signup/', SignupView.as_view(), name='api_signup'),
     
     path('api/v1/admin/users/', AdminUserListView.as_view(), name='admin_users_list'),
+    path('api/v1/admin/users/<int:pk>/', AdminUserDeleteView.as_view(), name='admin_users_delete'),
 
     # 🟢 Landing sahifa uchun: hech kim login qilmasdan dilerlar ro'yxatini ko'ra oladi
     path('api/v1/public/dealers/', PublicDealerListView.as_view(), name='public_dealers_list'),
