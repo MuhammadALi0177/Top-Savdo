@@ -2,9 +2,9 @@
   <div class="detail-page">
     <header class="navbar">
       <div class="navbar-inner">
-        <div class="brand" @click="goBack" style="cursor: pointer">
-          <i class="ri-shopping-bag-3-line"></i>
-          <span>Top-Savdo <b>B2B</b></span>
+        <div class="brand" @click="goBack">
+          <span class="brand__box">TS</span>
+          <span class="brand__word">Top-Savdo <em>B2B</em></span>
         </div>
         <button class="btn btn-outline back-btn" @click="goBack">
           <i class="ri-arrow-left-line"></i> Orqaga
@@ -13,11 +13,14 @@
     </header>
 
     <div v-if="loading" class="state-msg">
-      <i class="ri-loader-4-line spin"></i> Diler ma'lumotlari yuklanmoqda...
+      <div class="state-icon"><i class="ri-loader-4-line spin"></i></div>
+      <p>Diler ma'lumotlari yuklanmoqda...</p>
     </div>
 
-    <div v-else-if="loadError" class="state-msg error">
-      <i class="ri-error-warning-line"></i> {{ loadError }}
+    <div v-else-if="loadError" class="state-msg state-msg--error">
+      <div class="state-icon state-icon--error"><i class="ri-error-warning-line"></i></div>
+      <p>{{ loadError }}</p>
+      <button class="btn btn-ghost" @click="goBack">Ortga qaytish</button>
     </div>
 
     <template v-else-if="dealer">
@@ -39,16 +42,23 @@
       </section>
 
       <section class="products-section">
-        <h2 class="section-title">{{ dealer.company_name || "Diler" }} mahsulotlari</h2>
+        <div class="section-head">
+          <h2 class="section-title">{{ dealer.company_name || "Diler" }} mahsulotlari</h2>
+          <p class="section-sub">Ushbu diler taklif qilayotgan barcha mahsulotlar</p>
+        </div>
 
-        <div v-if="loadingProducts" class="state-msg"><i class="ri-loader-4-line spin"></i> Mahsulotlar yuklanmoqda...</div>
-        <div v-else-if="products.length === 0" class="state-msg">Bu dilerda hozircha mahsulot yo'q.</div>
+        <div v-if="loadingProducts" class="state-msg state-msg--inline">
+          <i class="ri-loader-4-line spin"></i> Mahsulotlar yuklanmoqda...
+        </div>
+        <div v-else-if="products.length === 0" class="state-msg state-msg--inline">
+          <i class="ri-inbox-line"></i> Bu dilerda hozircha mahsulot yo'q.
+        </div>
 
         <div v-else class="product-grid">
           <div v-for="product in products" :key="product.id" class="product-card" @click="goToProductDetail(product.id)">
             <div class="product-image">
               <img v-if="product.image" :src="getImageUrl(product.image)" :alt="product.name" />
-              <i v-else class="ri-image-2-line placeholder-icon"></i>
+              <div v-else class="placeholder"><i class="ri-image-2-line"></i></div>
               <span class="stock-badge" :class="{ low: product.stock <= 5 }">
                 {{ product.stock > 0 ? `${product.stock} dona` : "Tugagan" }}
               </span>
@@ -179,85 +189,244 @@ export default {
 </script>
 
 <style scoped>
-.detail-page { min-height: 100vh; background: #f5f7fb; }
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
+.detail-page {
+  --forest-950: #071b10;
+  --forest-900: #0a2f1d;
+  --forest-700: #145c38;
+  --forest-500: #1f6e43;
+  --accent-500: #22c55e;
+  --accent-600: #16a34a;
+  --paper: #f7f9f7;
+  --ink-900: #0f2419;
+  --ink-600: #536b60;
+  --line: #e3e8e4;
+
+  min-height: 100vh;
+  background: var(--paper);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* ---------- Navbar ---------- */
 .navbar {
-  background: linear-gradient(135deg, #0a2f1d 0%, #114e32 50%, #1f6e43 100%);
-  position: sticky; top: 0; z-index: 10;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(160deg, var(--forest-950) 0%, var(--forest-900) 55%, var(--forest-700) 100%);
+  box-shadow: 0 4px 18px rgba(7, 27, 16, 0.2);
 }
 .navbar-inner {
-  max-width: 1180px; margin: 0 auto; padding: 16px 24px;
-  display: flex; justify-content: space-between; align-items: center;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.brand { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 700; font-size: 18px; }
-.brand i { font-size: 22px; color: #34d399; }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-family: 'Manrope', sans-serif;
+}
+.brand__box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent-500), var(--accent-600));
+  color: #06170e;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 5px 14px rgba(16, 185, 129, 0.32);
+}
+.brand__word { color: #eafbf2; font-weight: 700; font-size: 16px; }
+.brand__word em { font-style: normal; color: #6ee7a8; }
 
-.btn { border: none; cursor: pointer; border-radius: 10px; font-weight: 600; padding: 10px 18px; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; transition: all .2s; }
-.btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.4); }
-.btn-outline:hover { background: rgba(255,255,255,0.12); }
+.btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 10px 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+.btn-outline {
+  background: rgba(255, 255, 255, 0.06);
+  color: #eafbf2;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+.btn-outline:hover { background: rgba(255, 255, 255, 0.14); }
+.btn-ghost { background: #eef4f0; color: var(--forest-900); }
+.btn-ghost:hover { background: #e2ede6; }
 
-.state-msg { text-align: center; padding: 80px 20px; color: #6b8578; font-size: 15px; }
-.state-msg.error { color: #dc2626; }
+/* ---------- Holat xabarlari ---------- */
+.state-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 110px 20px;
+  color: var(--ink-600);
+  font-size: 15px;
+}
+.state-msg--inline {
+  flex-direction: row;
+  justify-content: center;
+  padding: 40px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  gap: 8px;
+}
+.state-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--forest-700);
+  font-size: 26px;
+}
+.state-icon--error { background: #fef2f2; color: #dc2626; }
+.state-msg--error p { color: #b91c1c; font-weight: 500; }
 .spin { animation: spin 1s linear infinite; display: inline-block; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* Dealer hero */
-.dealer-hero { background: #fff; border-bottom: 1px solid #e5ede8; }
+/* ---------- Dealer hero ---------- */
+.dealer-hero {
+  background:
+    radial-gradient(circle at 90% 0%, rgba(34, 197, 94, 0.06), transparent 45%),
+    #fff;
+  border-bottom: 1px solid var(--line);
+}
 .dealer-hero-inner {
-  max-width: 1180px; margin: 0 auto; padding: 34px 24px;
-  display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 38px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 .dealer-avatar-lg {
-  width: 84px; height: 84px; border-radius: 50%;
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #fff; display: flex; align-items: center; justify-content: center;
-  font-size: 32px; font-weight: 700; flex-shrink: 0;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-500), var(--accent-600));
+  color: #06170e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 800;
+  font-family: 'Manrope', sans-serif;
+  flex-shrink: 0;
+  box-shadow: 0 10px 24px rgba(5, 150, 105, 0.22);
 }
 .dealer-hero-info { flex: 1; min-width: 220px; }
-.name-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
-.name-row h1 { font-size: 24px; color: #0a2f1d; margin: 0; }
+.name-row { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; }
+.name-row h1 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 26px;
+  color: var(--ink-900);
+  margin: 0;
+  font-weight: 800;
+}
 .trust-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 12px; font-weight: 700; color: #0369a1;
-  background: #e0f2fe; padding: 4px 10px; border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0369a1;
+  background: #e0f2fe;
+  padding: 4px 10px;
+  border-radius: 20px;
 }
 .trust-badge i { color: #0284c7; }
-.phone { font-size: 14px; color: #6b7280; display: flex; align-items: center; gap: 6px; margin: 0 0 6px; }
-.member-since { font-size: 13px; color: #059669; font-weight: 600; display: flex; align-items: center; gap: 6px; margin: 0 0 10px; }
+.phone { font-size: 14px; color: var(--ink-600); display: flex; align-items: center; gap: 6px; margin: 0 0 6px; }
+.member-since { font-size: 13px; color: var(--accent-600); font-weight: 600; display: flex; align-items: center; gap: 6px; margin: 0 0 12px; }
 .products-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 12.5px; font-weight: 700; color: #15803d;
-  background: #f0fdf4; padding: 5px 12px; border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--forest-700);
+  background: rgba(34, 197, 94, 0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
 }
 
-/* Products */
-.products-section { max-width: 1180px; margin: 0 auto; padding: 30px 24px 60px; }
-.section-title { font-size: 20px; color: #0a2f1d; margin: 0 0 18px; }
-.product-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px;
+/* ---------- Products ---------- */
+.products-section { max-width: 1180px; margin: 0 auto; padding: 36px 24px 60px; }
+.section-head { margin-bottom: 22px; }
+.section-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 21px;
+  color: var(--forest-900);
+  font-weight: 800;
+  margin: 0 0 4px;
 }
+.section-sub { color: var(--ink-600); font-size: 13.5px; }
+
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px; }
 .product-card {
-  background: #fff; border-radius: 14px; overflow: hidden; cursor: pointer;
-  box-shadow: 0 4px 14px rgba(10, 47, 29, 0.06);
-  transition: transform .15s, box-shadow .15s;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.product-card:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(10, 47, 29, 0.12); }
-.product-image { position: relative; height: 150px; background: #f4f8f6; display: flex; align-items: center; justify-content: center; }
-.product-image img { width: 100%; height: 100%; object-fit: cover; }
-.placeholder-icon { font-size: 40px; color: #cbd5e1; }
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(10, 47, 29, 0.1); }
+.product-image {
+  position: relative;
+  height: 160px;
+  background: linear-gradient(155deg, #eef4f0 0%, #e4efe8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.product-card:hover .product-image img { transform: scale(1.06); }
+.placeholder { width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 255, 255, 0.7); display: flex; align-items: center; justify-content: center; }
+.placeholder i { font-size: 28px; color: #b7c6bd; }
 .stock-badge {
-  position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95);
-  color: #15803d; font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 20px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
-.stock-badge.low { color: #b45309; }
-.product-body { padding: 14px 16px; }
-.product-body h4 { font-size: 14.5px; color: #0a2f1d; margin: 0 0 8px; line-height: 1.3; }
-.about-link { font-size: 11.5px; color: #059669; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+.stock-badge.low { color: #b91c1c; }
+.product-body { padding: 14px 16px 16px; }
+.product-body h4 { font-size: 14.5px; font-weight: 700; color: var(--ink-900); margin: 0 0 8px; line-height: 1.3; }
+.about-link { font-size: 11.5px; color: var(--accent-600); font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 8px; }
 .price-row { display: flex; align-items: center; }
-.price { font-weight: 800; color: #059669; font-size: 14.5px; }
+.price { font-family: 'Manrope', sans-serif; font-weight: 800; color: var(--forest-900); font-size: 14.5px; }
 
 @media (max-width: 640px) {
   .dealer-hero-inner { flex-direction: column; align-items: flex-start; }
+  .name-row h1 { font-size: 22px; }
 }
 </style>
