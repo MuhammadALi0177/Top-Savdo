@@ -243,4 +243,4 @@ class CourierMeView(APIView):
             "message": "Holat muvaffaqiyatli yangilandi!",
             "is_available": profile.is_available,
             "transport_type": profile.transport_type,
-        })
+        })  
