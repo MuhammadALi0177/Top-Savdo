@@ -417,102 +417,111 @@ export default {
 </script>
 
 <style scoped>
-/* ASOSIY STRUKTURA (DealerView bilan bir xil dizayn tizimi) */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+/* ---------- Asosiy struktura (boshqa panellar bilan bir xil dizayn tizimi) ---------- */
 .dashboard-wrapper {
+  --forest-950: #071b10;
+  --forest-900: #0a2f1d;
+  --forest-700: #145c38;
+  --forest-500: #1f6e43;
+  --accent-500: #22c55e;
+  --accent-600: #16a34a;
+  --paper: #f7f9f7;
+  --ink-900: #0f2419;
+  --ink-600: #536b60;
+  --line: #e3e8e4;
+
   display: flex;
   min-height: 100vh;
-  background-color: #f4f6f9;
+  background-color: var(--paper);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
 }
+
+/* ---------- Sidebar ---------- */
 .sidebar-menu {
-  width: 260px;
-  min-width: 260px;
-  background: #002e1f;
+  width: 264px;
+  min-width: 264px;
+  background: linear-gradient(190deg, var(--forest-950) 0%, var(--forest-900) 55%, var(--forest-700) 100%);
   color: white;
-  padding: 24px 18px;
+  padding: 26px 20px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 20px;
 }
 .sidebar-brand {
   display: flex;
   align-items: center;
   gap: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 18px;
 }
 .logo-icon {
-  font-size: 24px;
-  color: #10b981;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-500), var(--accent-600));
+  color: #06170e;
+  font-size: 17px;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.32);
+  flex-shrink: 0;
 }
 .sidebar-brand h3 {
-  font-size: 17px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 16px;
   font-weight: 700;
+  color: #eafbf2;
+  margin: 0;
 }
+
 .user-brief-info {
   display: flex;
   align-items: center;
   gap: 12px;
   background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 .user-avatar {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #10b981;
+  background: rgba(110, 231, 168, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
+  color: #6ee7a8;
+  flex-shrink: 0;
 }
-.user-role {
-  font-size: 13px;
-  font-weight: 600;
-  color: #d1fae5;
-}
+.user-role { font-size: 12.5px; font-weight: 600; color: #bcd9c8; }
 
+/* ---------- Ish holati toggle karta ---------- */
 .availability-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 14px;
-  border-radius: 10px;
+  border-radius: 12px;
 }
-.availability-text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.a-label {
-  font-size: 12px;
-  color: #94a3b8;
-}
-.a-value {
-  font-size: 14px;
-  font-weight: 700;
-}
+.availability-text { display: flex; flex-direction: column; gap: 4px; }
+.a-label { font-size: 11.5px; color: #9db3a8; }
+.a-value { font-size: 13.5px; font-weight: 700; }
 
-/* TOGGLE SWITCH */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 46px;
-  height: 26px;
-  flex-shrink: 0;
-}
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
+/* Toggle switch */
+.switch { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #64748b;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(255, 255, 255, 0.25);
   transition: 0.3s;
   border-radius: 26px;
 }
@@ -527,40 +536,32 @@ export default {
   transition: 0.3s;
   border-radius: 50%;
 }
-.switch input:checked + .slider {
-  background-color: #10b981;
-}
-.switch input:checked + .slider:before {
-  transform: translateX(20px);
-}
+.switch input:checked + .slider { background: linear-gradient(to right, var(--accent-500), var(--accent-600)); }
+.switch input:checked + .slider:before { transform: translateX(20px); }
 
-.nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+/* ---------- Nav ---------- */
+.nav-links { display: flex; flex-direction: column; gap: 6px; }
 .nav-links button {
   display: flex;
   align-items: center;
   gap: 10px;
   background: none;
   border: none;
-  color: #cbd5e1;
+  color: #bcd9c8;
   padding: 12px 14px;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
   text-align: left;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
-.nav-links button:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-}
+.nav-links button:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
 .nav-links button.active {
-  background: #10b981;
-  color: white;
-  font-weight: 600;
+  background: linear-gradient(to right, var(--accent-500), var(--accent-600));
+  color: #06170e;
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.3);
 }
 .badge-count {
   margin-left: auto;
@@ -572,226 +573,135 @@ export default {
   border-radius: 10px;
 }
 
-.main-content-area {
-  flex: 1;
-  padding: 28px 34px;
-}
-.main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-.page-title h2 {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1f2026;
-}
-.header-actions {
-  display: flex;
-  gap: 10px;
-}
+/* ---------- Asosiy hudud ---------- */
+.main-content-area { flex: 1; padding: 30px 36px; min-width: 0; }
+.main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 26px; flex-wrap: wrap; gap: 12px; }
+.page-title h2 { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; color: var(--ink-900); margin: 0; }
+.header-actions { display: flex; gap: 10px; }
 .refresh-btn {
-  background: #e2f6ee;
-  color: #059669;
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--forest-700);
   border: none;
   padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 9px;
+  font-weight: 700;
+  font-family: inherit;
+  font-size: 13.5px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
+.refresh-btn:hover { background: rgba(34, 197, 94, 0.18); }
 .logout-btn {
   background: transparent;
-  color: #1f2026;
-  border: 1px solid #cbd5e1;
+  color: var(--ink-900);
+  border: 1px solid var(--line);
   padding: 10px 18px;
-  border-radius: 8px;
+  border-radius: 9px;
   cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
+.logout-btn:hover { border-color: #fca5a5; color: #dc2626; background: #fef2f2; }
 
-/* KARTOCHKALAR (yangi buyurtmalar) */
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 18px;
-}
+/* ---------- Kartochkalar (yangi buyurtmalar) ---------- */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
 .order-card {
   background: white;
-  border: 1px solid #e4e7ee;
-  border-radius: 12px;
-  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.order-card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.order-id {
-  font-weight: 700;
-  color: #1f2026;
-}
-.order-card-body p {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13.5px;
-  color: #475569;
-  margin-bottom: 6px;
-}
-.order-amount {
-  font-weight: 700;
-  color: #059669 !important;
-}
-.full-width {
-  width: 100%;
-  justify-content: center;
-}
+.order-card:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(10, 47, 29, 0.08); }
+.order-card-head { display: flex; justify-content: space-between; align-items: center; }
+.order-id { font-weight: 700; color: var(--ink-900); font-size: 14.5px; }
+.order-card-body p { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink-600); margin-bottom: 6px; }
+.order-card-body p i { color: var(--forest-700); }
+.order-amount { font-weight: 800 !important; color: var(--forest-700) !important; font-family: 'Manrope', sans-serif; }
+.full-width { width: 100%; justify-content: center; }
 
-/* JADVAL (DealerView bilan bir xil) */
+/* ---------- Jadval ---------- */
 .table-container {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid #e4e7ee;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 16px rgba(10, 47, 29, 0.04);
 }
-.custom-data-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 14px;
-}
+.custom-data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; }
 .custom-data-table th {
-  background: #f8fafc;
+  background: var(--paper);
   padding: 14px 18px;
-  color: #64748b;
-  border-bottom: 1px solid #e2e8f0;
-  font-weight: 600;
-}
-.custom-data-table td {
-  padding: 14px 18px;
-  border-bottom: 1px solid #f1f5f9;
-  vertical-align: middle;
-}
-.custom-data-table tr:hover {
-  background: #f8fafc;
-}
-.c-phone {
+  color: var(--ink-600);
+  border-bottom: 1px solid var(--line);
+  font-weight: 700;
   font-size: 12px;
-  color: #94a3b8;
-  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
+.custom-data-table td { padding: 14px 18px; border-bottom: 1px solid #f1f4f2; vertical-align: middle; color: var(--ink-900); }
+.custom-data-table tr:hover { background: #fafcfa; }
+.c-phone { font-size: 12px; color: var(--ink-600); margin-top: 2px; }
 
+/* ---------- Amal tugmalari ---------- */
 .action-btn {
   border: none;
-  padding: 9px 14px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 13px;
+  padding: 9px 15px;
+  border-radius: 9px;
+  font-weight: 700;
+  font-family: inherit;
+  font-size: 12.5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  transition: all 0.2s ease;
 }
-.action-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-.accept-btn {
-  background: #10b981;
-  color: white;
-}
-.accept-btn:hover {
-  background: #059669;
-}
-.ship-btn {
-  background: #0369a1;
-  color: white;
-}
-.ship-btn:hover {
-  background: #075985;
-}
+.action-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.accept-btn { background: linear-gradient(to right, var(--accent-500), var(--accent-600)); color: #06170e; box-shadow: 0 6px 16px rgba(5, 150, 105, 0.28); }
+.accept-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(5, 150, 105, 0.36); }
+.ship-btn { background: #0369a1; color: white; }
+.ship-btn:hover:not(:disabled) { background: #075985; }
 
-.status-pill {
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  display: inline-block;
-}
-.status-pill.delivered,
-.status-pill.accepted {
-  background: #e2fbe8;
-  color: #15803d;
-}
-.status-pill.cancelled,
-.status-pill.canceled {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-.status-pill.pending {
-  background: #fef3c7;
-  color: #b45309;
-}
-.status-pill.courier_requested,
-.status-pill.shipped {
-  background: #e0f2fe;
-  color: #0369a1;
-}
+/* ---------- Status belgilari ---------- */
+.status-pill { padding: 4px 11px; border-radius: 20px; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; display: inline-block; }
+.status-pill.delivered, .status-pill.accepted { background: #e2fbe8; color: #15803d; }
+.status-pill.cancelled, .status-pill.canceled { background: #fee2e2; color: #b91c1c; }
+.status-pill.pending { background: #fef3c7; color: #b45309; }
+.status-pill.courier_requested, .status-pill.shipped { background: #e0f2fe; color: #0369a1; }
 
-.status-text {
-  font-size: 13px;
-  font-weight: 600;
-}
-.text-success {
-  color: #16a34a !important;
-}
-.text-danger {
-  color: #dc2626 !important;
-}
-.text-warning {
-  color: #ea580c !important;
-}
+.status-text { font-size: 12.5px; font-weight: 700; }
+.text-success { color: var(--accent-600) !important; }
+.text-danger { color: #dc2626 !important; }
+.text-warning { color: #ea580c !important; }
+
 .no-data {
   text-align: center;
-  padding: 40px 0;
-  color: #94a3b8;
+  padding: 46px 0;
+  color: #9aab9f;
   font-style: italic;
-}
-.animate-fade-in {
-  animation: fadeIn 0.3s ease;
-}
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--line);
 }
 
-/* ===== MOBIL MOSLASHUV ===== */
+.animate-fade-in { animation: fadeIn 0.3s ease; }
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* =========================================================================
+   RESPONSIV (Planshet va Telefon) MOSLASHUV
+   ========================================================================= */
 @media (max-width: 900px) {
-  .dashboard-wrapper {
-    flex-direction: column;
-  }
+  .dashboard-wrapper { flex-direction: column; }
   .sidebar-menu {
     width: 100%;
     min-width: 100%;
@@ -800,18 +710,13 @@ export default {
     align-items: center;
     padding: 14px 16px;
     gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
-  .sidebar-brand {
-    flex: 1 1 auto;
-  }
-  .user-brief-info {
-    flex: 1 1 auto;
-    padding: 8px 10px;
-  }
-  .availability-card {
-    flex: 1 1 100%;
-    order: 3;
-  }
+  .sidebar-brand { flex: 1 1 auto; border-bottom: none; padding-bottom: 0; }
+  .user-brief-info { flex: 1 1 auto; padding: 8px 10px; }
+  .availability-card { flex: 1 1 100%; order: 3; }
   .nav-links {
     flex-direction: row;
     flex-wrap: nowrap;
@@ -820,60 +725,26 @@ export default {
     order: 4;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 4px;
+    scrollbar-width: none;
   }
-  .nav-links button {
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .badge-count {
-    margin-left: 6px;
-  }
-  .main-content-area {
-    padding: 18px 14px;
-  }
-  .main-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .page-title h2 {
-    font-size: 18px;
-  }
-  .header-actions {
-    width: 100%;
-  }
-  .header-actions button {
-    flex: 1;
-    justify-content: center;
-  }
-  .cards-grid {
-    grid-template-columns: 1fr;
-  }
-  .table-container {
-    overflow-x: auto;
-  }
-  .custom-data-table {
-    min-width: 640px;
-  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links button { white-space: nowrap; flex-shrink: 0; }
+  .badge-count { margin-left: 6px; }
+  .main-content-area { padding: 18px 14px; }
+  .main-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .page-title h2 { font-size: 18px; }
+  .header-actions { width: 100%; }
+  .header-actions button { flex: 1; justify-content: center; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .table-container { overflow-x: auto; }
+  .custom-data-table { min-width: 640px; }
 }
 
 @media (max-width: 480px) {
-  .sidebar-brand h3 {
-    font-size: 15px;
-  }
-  .page-title h2 {
-    font-size: 16px;
-  }
-  .order-card {
-    padding: 14px;
-  }
-  .order-card-body p {
-    font-size: 13px;
-  }
-  .refresh-btn,
-  .logout-btn {
-    padding: 9px 12px;
-    font-size: 13px;
-  }
+  .sidebar-brand h3 { font-size: 15px; }
+  .page-title h2 { font-size: 16px; }
+  .order-card { padding: 14px; }
+  .order-card-body p { font-size: 13px; }
+  .refresh-btn, .logout-btn { padding: 9px 12px; font-size: 13px; }
 }
 </style>
