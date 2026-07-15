@@ -67,6 +67,47 @@ class AdminUserDeleteView(generics.DestroyAPIView):
         return super().delete(request, *args, **kwargs)
 
 # =========================================================================
+# 🟢 Admin: foydalanuvchiga yangi parol o'rnatish
+# (Eslatma: parolni hech qachon ochiq holda ko'rish yoki chiqarish mumkin
+# emas — Django uni bir tomonlama xesh qilib saqlaydi. Shuning uchun admin
+# faqat YANGI parol o'rnata oladi, eskisini ko'ra olmaydi.)
+# =========================================================================
+class AdminResetPasswordView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk, *args, **kwargs):
+        if not (request.user.role == 'ADMIN' or request.user.is_superuser or request.user.is_staff):
+            return Response(
+                {"error": "Sizda bu amalni bajarish uchun huquq yo'q!"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        new_password = request.data.get('new_password')
+        if not new_password or len(new_password) < 4:
+            return Response(
+                {"error": "Yangi parol kamida 4 belgidan iborat bo'lishi kerak!"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            target_user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"error": "Foydalanuvchi topilmadi!"}, status=status.HTTP_404_NOT_FOUND)
+
+        target_user.set_password(new_password)
+        target_user.save()
+
+        # 🟢 Xavfsizlik: parol almashtirilgach, eski tokenlar bekor qilinadi
+        Token.objects.filter(user=target_user).delete()
+
+        return Response(
+            {"message": f"{target_user.phone_number} uchun yangi parol muvaffaqiyatli o'rnatildi!"},
+            status=status.HTTP_200_OK
+        )
+
+
+# =========================================================================
 # 🟢 Public Dealer List: Landing sahifada, ro'yxatdan o'tmagan mehmonlar
 # ham dilerlar ro'yxatini va ularning mahsulot sonini ko'rishi uchun.
 # =========================================================================
@@ -243,4 +284,4 @@ class CourierMeView(APIView):
             "message": "Holat muvaffaqiyatli yangilandi!",
             "is_available": profile.is_available,
             "transport_type": profile.transport_type,
-        })  
+        })

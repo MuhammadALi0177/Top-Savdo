@@ -468,10 +468,51 @@
           </table>
         </div>
 
-        <div
-          v-if="['tokens', 'loglar'].includes(currentTab)"
-          class="tab-pane table-card"
-        >
+        <div v-if="currentTab === 'tokens'" class="tab-pane table-card">
+          <div class="section-header">
+            <h3><i class="ri-key-2-line"></i> Kirish ma'lumotlari (Access loginlar)</h3>
+          </div>
+          <p class="empty-text access-note">
+            <i class="ri-shield-check-line"></i>
+            Xavfsizlik sabab, allaqachon o'rnatilgan parollar ochiq holda ko'rsatilmaydi.
+            Zarurat tug'ilsa, foydalanuvchi uchun yangi parol o'rnatishingiz mumkin.
+          </p>
+
+          <div v-if="loading" class="no-data">Yuklanmoqda...</div>
+          <div v-else-if="users.length === 0" class="no-data">
+            Foydalanuvchilar mavjud emas.
+          </div>
+          <table v-else class="modern-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Ism (Login)</th>
+                <th>Telefon raqam</th>
+                <th>Rol</th>
+                <th>Parol</th>
+                <th>Amallar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in users" :key="user.id">
+                <td>#{{ user.id }}</td>
+                <td class="username-cell">{{ user.username }}</td>
+                <td>{{ user.phone_number || "—" }}</td>
+                <td>
+                  <span class="role-tag" :class="user.role ? user.role.toLowerCase() : 'client'">{{ user.role || "CLIENT" }}</span>
+                </td>
+                <td><span class="password-hidden"><i class="ri-lock-2-line"></i> ••••••••</span></td>
+                <td>
+                  <button @click="openResetPassword(user)" class="reset-pass-btn">
+                    <i class="ri-key-2-line"></i> Yangi parol o'rnatish
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div v-if="currentTab === 'loglar'" class="tab-pane table-card">
           <h3>Ma'lumotlar mavjud emas</h3>
           <p class="empty-text">
             Ushbu bo'limni dasturga ulash jarayoni ketmoqda...
@@ -502,6 +543,35 @@
   </div>
 </div>
 
+    <div class="modal-overlay" v-if="isResetModalOpen" @click.self="closeResetPassword">
+      <div class="modal-content">
+        <h3><i class="ri-key-2-line"></i> Yangi parol o'rnatish</h3>
+        <p class="reset-target-info" v-if="resetTargetUser">
+          <strong>{{ resetTargetUser.username }}</strong>
+          <span>{{ resetTargetUser.phone_number }}</span>
+        </p>
+        <form @submit.prevent="submitResetPassword">
+          <div class="form-group">
+            <label>Yangi parol:</label>
+            <input
+              type="text"
+              v-model="newPasswordValue"
+              placeholder="Kamida 4 ta belgi"
+              required
+              minlength="4"
+            />
+          </div>
+          <p v-if="resetError" class="reset-error-text">{{ resetError }}</p>
+          <div class="modal-actions">
+            <button type="button" @click="closeResetPassword" class="cancel-btn">Bekor</button>
+            <button type="submit" :disabled="submittingReset" class="save-btn">
+              {{ submittingReset ? 'Saqlanmoqda...' : "O'rnatish" }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -526,6 +596,51 @@ export default {
     const isCatModalOpen = ref(false);
     const submittingCat = ref(false);
     const newCategory = ref({ name: "", slug: ""});
+
+    // 🟢 Admin: foydalanuvchiga yangi parol o'rnatish (parol hech qachon
+    // ochiq holda ko'rsatilmaydi — faqat yangisini kiritish mumkin)
+    const isResetModalOpen = ref(false);
+    const resetTargetUser = ref(null);
+    const newPasswordValue = ref("");
+    const submittingReset = ref(false);
+    const resetError = ref("");
+
+    const openResetPassword = (user) => {
+      resetTargetUser.value = user;
+      newPasswordValue.value = "";
+      resetError.value = "";
+      isResetModalOpen.value = true;
+    };
+
+    const closeResetPassword = () => {
+      isResetModalOpen.value = false;
+      resetTargetUser.value = null;
+      newPasswordValue.value = "";
+      resetError.value = "";
+    };
+
+    const submitResetPassword = async () => {
+      if (!resetTargetUser.value) return;
+      submittingReset.value = true;
+      resetError.value = "";
+      const token = localStorage.getItem("token");
+      try {
+        await api.post(
+          `admin/users/${resetTargetUser.value.id}/reset-password/`,
+          { new_password: newPasswordValue.value },
+          { headers: { Authorization: `Token ${token}` } }
+        );
+        alert(`${resetTargetUser.value.username} uchun yangi parol muvaffaqiyatli o'rnatildi!`);
+        closeResetPassword();
+      } catch (error) {
+        resetError.value =
+          error.response && error.response.data && error.response.data.error
+            ? error.response.data.error
+            : "Parolni o'rnatishda xatolik yuz berdi.";
+      } finally {
+        submittingReset.value = false;
+      }
+    };
 
     // 🟢 Mobil/planshet uchun: yon menyu (sidebar) ochiq/yopiqligini boshqarish
     const isSidebarOpen = ref(false);
@@ -760,6 +875,14 @@ const deleteCategory = async (id, name) => {
       countByRole,
       getTabTitle,
       handleLogout,
+      isResetModalOpen,
+      resetTargetUser,
+      newPasswordValue,
+      submittingReset,
+      resetError,
+      openResetPassword,
+      closeResetPassword,
+      submitResetPassword,
     };
   },
 };
@@ -1110,6 +1233,70 @@ const deleteCategory = async (id, name) => {
 }
 
 .empty-text { color: var(--ink-600); font-size: 13.5px; }
+
+.access-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: var(--forest-700);
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+}
+.access-note i { font-size: 17px; color: var(--accent-600); flex-shrink: 0; }
+
+.password-hidden {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #9db3a8;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+.password-hidden i { font-size: 14px; }
+
+.reset-pass-btn {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--forest-700);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  padding: 7px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+}
+.reset-pass-btn:hover { background: var(--accent-500); color: #06170e; border-color: transparent; }
+
+.reset-target-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+}
+.reset-target-info strong { font-size: 14px; color: var(--ink-900); }
+.reset-target-info span { font-size: 12.5px; color: var(--ink-600); }
+
+.reset-error-text {
+  color: #dc2626;
+  font-size: 13px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 9px 12px;
+  border-radius: 8px;
+  margin: -6px 0 14px;
+}
 
 code {
   background: var(--paper);
